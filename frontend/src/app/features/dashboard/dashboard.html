@@ -1,0 +1,109 @@
+<div class="dashboard-wrapper">
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">System Overview</h1>
+    <p class="dashboard-subtitle">Monitor talent pools, skill profiles, and assessment statistics across all microservices.</p>
+  </div>
+
+  @if (statusLoading()) {
+    <div class="loading-overlay">
+      <div class="spinner"></div>
+      <h3 class="state-title">Analyzing Organization Metrics</h3>
+      <p class="state-desc">Connecting to microservice catalog and processing talent mapping datasets...</p>
+    </div>
+  } @else {
+    <!-- Stats Cards Grid -->
+    <div class="stats-grid">
+      <div class="stat-card glass-panel glow-hover">
+        <div class="stat-icon-wrapper blue">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-label">Total Employees</span>
+          <span class="stat-value">{{ employeeCount() }}</span>
+        </div>
+      </div>
+
+      <div class="stat-card glass-panel glow-hover">
+        <div class="stat-icon-wrapper purple">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-label">Skills Catalog</span>
+          <span class="stat-value">{{ skillCount() }}</span>
+        </div>
+      </div>
+
+      <div class="stat-card glass-panel glow-hover">
+        <div class="stat-icon-wrapper green">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-label">Average Score</span>
+          <span class="stat-value">{{ avgAssessmentScore() }}%</span>
+        </div>
+      </div>
+
+      <div class="stat-card glass-panel glow-hover">
+        <div class="stat-icon-wrapper cyan">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+          </svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-label">Valid Certificates</span>
+          <span class="stat-value">{{ activeCertCount() }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts and Breakdown -->
+    <div class="dashboard-grid">
+      <!-- Proficiency Chart (Custom built with styled DOM nodes) -->
+      <div class="chart-card glass-panel">
+        <h3 class="card-title">Skill Proficiency Distribution</h3>
+        <p class="card-subtitle">Aggregate count of employee skills classified by levels (1-5)</p>
+        
+        <div class="bar-chart-container">
+          @for (item of skillProficiencies() | keyvalue; track item.key) {
+            <div class="bar-chart-row">
+              <span class="bar-label">L{{ item.key }} Proficiency</span>
+              <div class="bar-track">
+                <div class="bar-fill" [style.width.%]="(item.value / (employeeCount() || 1)) * 100"></div>
+              </div>
+              <span class="bar-value">{{ item.value }} instances</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Categories Breakdown -->
+      <div class="chart-card glass-panel">
+        <h3 class="card-title">Skill Categories Coverage</h3>
+        <p class="card-subtitle">Breakdown of catalog library skills by their categorized domain areas</p>
+        
+        <div class="category-list">
+          @for (item of skillCategories() | keyvalue; track item.key) {
+            <div class="category-item">
+              <div class="category-info">
+                <span class="category-name">{{ item.key }}</span>
+                <span class="category-percentage">{{ item.value }} Skills</span>
+              </div>
+              <div class="category-pill-track">
+                <div class="category-pill-fill" [style.width.%]="(item.value / (skillCount() || 1)) * 100"></div>
+              </div>
+            </div>
+          }
+          @if ((skillCategories() | keyvalue).length === 0) {
+            <p style="color: var(--text-muted); text-align: center; margin-top: 2rem;">No skill categories defined yet.</p>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

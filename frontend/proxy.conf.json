@@ -1,0 +1,52 @@
+{
+  "/api/employee": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "pathRewrite": {
+      "^/api/employee": "/employee"
+    }
+  },
+  "/api/users": {
+    "target": "http://localhost:8081",
+    "secure": false,
+    "pathRewrite": {
+      "^/api/users": "/users"
+    }
+  },
+  "/api/contacts": {
+    "target": "http://localhost:8082",
+    "secure": false,
+    "pathRewrite": {
+      "^/api/contacts": "/contacts"
+    }
+  },
+  "/api/skills": {
+    "target": "http://localhost:8083",
+    "secure": false,
+    "pathRewrite": {
+      "^/api/skills": "/skills"
+    }
+  },
+  "/api/employeeSkills": {
+    "target": "http://localhost:8084",
+    "secure": false,
+    "pathRewrite": {
+      "^/api/employeeSkills": "/employeeSkills"
+    }
+  },
+  "/api/certificates": {
+    "target": "http://localhost:8085",
+    "secure": false
+  },
+  "/api/competencies": {
+    "target": "http://localhost:8086",
+    "secure": false
+  },
+  "/api/assessment": {
+    "target": "http://localhost:8087",
+    "secure": false,
+    "pathRewrite": {
+      "^/api/assessment": "/assessment"
+    }
+  }
+}
