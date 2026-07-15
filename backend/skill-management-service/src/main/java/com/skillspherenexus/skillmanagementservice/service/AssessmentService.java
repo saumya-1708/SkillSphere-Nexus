@@ -2,17 +2,19 @@ package com.skillspherenexus.skillmanagementservice.service;
 
 import java.util.List;
 
-import com.skillspherenexus.skillmanagementservice.entity.Assessment;
+import com.skillspherenexus.skillmanagementservice.dto.AssessmentRequestDTO;
+import com.skillspherenexus.skillmanagementservice.dto.AssessmentResponseDTO;
 
 public interface AssessmentService {
 
-    Assessment saveAssessment(Assessment assessment);
+    AssessmentResponseDTO saveAssessment(AssessmentRequestDTO request);
 
-    List<Assessment> getAllAssessments();
+    List<AssessmentResponseDTO> getAllAssessments();
 
-    Assessment getAssessmentById(Long id);
+    AssessmentResponseDTO getAssessmentById(Long id);
 
-    Assessment updateAssessment(Long id, Assessment assessment);
+    AssessmentResponseDTO updateAssessment(Long id,
+                                           AssessmentRequestDTO request);
 
     void deleteAssessment(Long id);
 }

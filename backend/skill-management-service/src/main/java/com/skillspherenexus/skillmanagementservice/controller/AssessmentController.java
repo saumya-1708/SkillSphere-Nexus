@@ -3,7 +3,6 @@ package com.skillspherenexus.skillmanagementservice.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,42 +12,50 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.skillspherenexus.skillmanagementservice.entity.Assessment;
+import com.skillspherenexus.skillmanagementservice.dto.AssessmentRequestDTO;
+import com.skillspherenexus.skillmanagementservice.dto.AssessmentResponseDTO;
 import com.skillspherenexus.skillmanagementservice.service.AssessmentService;
 
 @RestController
-@RequestMapping("/assessment")
-@CrossOrigin("*")
+@RequestMapping("/assessments")
 public class AssessmentController {
 
     @Autowired
-    private AssessmentService service;
+    private AssessmentService assessmentService;
 
     @PostMapping
-    public Assessment saveAssessment(@RequestBody Assessment assessment){
-        return service.saveAssessment(assessment);
+    public AssessmentResponseDTO saveAssessment(
+            @RequestBody AssessmentRequestDTO request) {
+
+        return assessmentService.saveAssessment(request);
     }
 
     @GetMapping
-    public List<Assessment> getAllAssessments(){
-        return service.getAllAssessments();
+    public List<AssessmentResponseDTO> getAllAssessments() {
+
+        return assessmentService.getAllAssessments();
     }
 
     @GetMapping("/{id}")
-    public Assessment getAssessment(@PathVariable Long id){
-        return service.getAssessmentById(id);
+    public AssessmentResponseDTO getAssessmentById(
+            @PathVariable Long id) {
+
+        return assessmentService.getAssessmentById(id);
     }
 
     @PutMapping("/{id}")
-    public Assessment updateAssessment(@PathVariable Long id,
-                                       @RequestBody Assessment assessment){
-        return service.updateAssessment(id, assessment);
+    public AssessmentResponseDTO updateAssessment(
+            @PathVariable Long id,
+            @RequestBody AssessmentRequestDTO request) {
+
+        return assessmentService.updateAssessment(id, request);
     }
 
     @DeleteMapping("/{id}")
-    public String deleteAssessment(@PathVariable Long id){
-        service.deleteAssessment(id);
-        return "Assessment Deleted Successfully";
-    }
+    public String deleteAssessment(@PathVariable Long id) {
 
+        assessmentService.deleteAssessment(id);
+
+        return "Assessment deleted successfully";
+    }
 }
