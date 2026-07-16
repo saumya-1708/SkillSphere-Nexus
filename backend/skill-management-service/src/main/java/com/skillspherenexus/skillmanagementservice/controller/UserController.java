@@ -12,42 +12,38 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.skillspherenexus.skillmanagementservice.entity.User;
+import com.skillspherenexus.skillmanagementservice.dto.UserRequestDTO;
+import com.skillspherenexus.skillmanagementservice.dto.UserResponseDTO;
 import com.skillspherenexus.skillmanagementservice.service.UserService;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    // CREATE USER
     @PostMapping
-    public User saveUser(@RequestBody User user) {
-        return userService.saveUser(user);
+    public UserResponseDTO saveUser(@RequestBody UserRequestDTO request) {
+        return userService.saveUser(request);
     }
 
-    // GET ALL USERS
     @GetMapping
-    public List<User> getAllUsers() {
+    public List<UserResponseDTO> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    // GET USER BY ID
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable Integer id) {
+    public UserResponseDTO getUserById(@PathVariable Integer id) {
         return userService.getUserById(id);
     }
 
-    // UPDATE USER
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Integer id,
-                           @RequestBody User user) {
-        return userService.updateUser(id, user);
+    public UserResponseDTO updateUser(@PathVariable Integer id,
+                                      @RequestBody UserRequestDTO request) {
+        return userService.updateUser(id, request);
     }
 
-    // DELETE USER
     @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);

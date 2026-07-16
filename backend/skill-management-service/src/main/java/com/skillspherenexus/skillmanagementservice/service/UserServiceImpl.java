@@ -1,10 +1,13 @@
 package com.skillspherenexus.skillmanagementservice.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skillspherenexus.skillmanagementservice.dto.UserRequestDTO;
+import com.skillspherenexus.skillmanagementservice.dto.UserResponseDTO;
 import com.skillspherenexus.skillmanagementservice.entity.User;
 import com.skillspherenexus.skillmanagementservice.repository.UserRepository;
 
@@ -15,34 +18,50 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public User saveUser(User user) {
-        return userRepository.save(user);
+    public UserResponseDTO saveUser(UserRequestDTO request) {
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+
+        return convertToResponse(userRepository.save(user));
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponseDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public User getUserById(Integer userId) {
-        return userRepository.findById(userId).orElse(null);
+    public UserResponseDTO getUserById(Integer userId) {
+        return userRepository.findById(userId)
+                .map(this::convertToResponse)
+                .orElse(null);
     }
 
     @Override
-    public User updateUser(Integer userId, User user) {
+    public UserResponseDTO updateUser(Integer userId, UserRequestDTO request) {
 
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        existingUser.setName(user.getName());
-        existingUser.setEmail(user.getEmail());
+        existingUser.setName(request.getName());
+        existingUser.setEmail(request.getEmail());
 
-        return userRepository.save(existingUser);
+        return convertToResponse(userRepository.save(existingUser));
     }
 
     @Override
     public void deleteUser(Integer userId) {
         userRepository.deleteById(userId);
+    }
+
+    private UserResponseDTO convertToResponse(User user) {
+        UserResponseDTO response = new UserResponseDTO();
+        response.setUserId(user.getUserId());
+        response.setName(user.getName());
+        response.setEmail(user.getEmail());
+        return response;
     }
 }

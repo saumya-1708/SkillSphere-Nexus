@@ -2,7 +2,19 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { Competency, CompetencyFramework, EmployeeCompetency, GapResult } from '../../shared/models/competency';
+import {
+  Competency,
+  CompetencyCategory,
+  CompetencyFramework,
+  EmployeeCompetency,
+  GapResult,
+  CompetencyRequestDTO,
+  CompetencyResponseDTO,
+  CompetencyFrameworkRequestDTO,
+  CompetencyFrameworkResponseDTO,
+  EmployeeCompetencyRequestDTO,
+  EmployeeCompetencyResponseDTO
+} from '../../shared/models/competency';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -10,6 +22,7 @@ import { environment } from '../../../environments/environment';
 })
 export class CompetencyService {
   private readonly baseUrl = `${environment.apiUrl}/competencies`;
+  private readonly competencyCache = new Map<string, Competency>();
 
   // Realistic mock databases
   private mockCompetencies: Competency[] = [
@@ -37,12 +50,91 @@ export class CompetencyService {
 
   constructor(private http: HttpClient) {}
 
+  private refreshCompetencyCache(competencies: Competency[]): void {
+    this.competencyCache.clear();
+    competencies.forEach(comp => this.competencyCache.set(comp.competencyId, comp));
+  }
+
+  private toCompetencyModel(dto: CompetencyResponseDTO): Competency {
+    return {
+      competencyId: dto.competencyId,
+      name: dto.name,
+      category: dto.category,
+      description: dto.description,
+      maxLevel: dto.maxLevel
+    };
+  }
+
+  private toCompetencyRequest(dto: Competency): CompetencyRequestDTO {
+    return {
+      name: dto.name,
+      category: dto.category,
+      description: dto.description,
+      maxLevel: dto.maxLevel
+    };
+  }
+
+  private toFrameworkModel(dto: CompetencyFrameworkResponseDTO): CompetencyFramework {
+    const competency = this.competencyCache.get(dto.competencyId) ?? {
+      competencyId: dto.competencyId,
+      name: 'Unknown competency',
+      category: 'TECHNICAL' as CompetencyCategory,
+      description: '',
+      maxLevel: 5
+    };
+
+    return {
+      frameworkId: dto.frameworkId,
+      role: dto.role,
+      competency,
+      requiredLevel: dto.requiredLevel
+    };
+  }
+
+  private toFrameworkRequest(model: CompetencyFramework): CompetencyFrameworkRequestDTO {
+    return {
+      role: model.role,
+      competencyId: model.competency.competencyId,
+      requiredLevel: model.requiredLevel
+    };
+  }
+
+  private toEmployeeCompetencyModel(dto: EmployeeCompetencyResponseDTO): EmployeeCompetency {
+    const competency = this.competencyCache.get(dto.competencyId) ?? {
+      competencyId: dto.competencyId,
+      name: 'Unknown competency',
+      category: 'TECHNICAL' as CompetencyCategory,
+      description: '',
+      maxLevel: 5
+    };
+
+    return {
+      employeeCompetencyId: dto.employeeCompetencyId,
+      employeeId: dto.employeeId,
+      competency,
+      currentLevel: dto.currentLevel
+    };
+  }
+
+  private toEmployeeCompetencyRequest(model: EmployeeCompetency): EmployeeCompetencyRequestDTO {
+    return {
+      employeeId: model.employeeId,
+      competencyId: model.competency.competencyId,
+      currentLevel: model.currentLevel
+    };
+  }
+
   // --- Competency Catalog ---
   getAll(): Observable<Competency[]> {
     if (environment.useMock) {
       return of([...this.mockCompetencies]);
     }
-    return this.http.get<Competency[]>(this.baseUrl).pipe(
+    return this.http.get<CompetencyResponseDTO[]>(this.baseUrl).pipe(
+      map(list => {
+        const competencies = list.map(dto => this.toCompetencyModel(dto));
+        this.refreshCompetencyCache(competencies);
+        return competencies;
+      }),
       catchError(this.handleError)
     );
   }
@@ -52,7 +144,12 @@ export class CompetencyService {
       const comp = this.mockCompetencies.find(c => c.competencyId === id);
       return comp ? of({ ...comp }) : throwError(() => new Error('Competency not found'));
     }
-    return this.http.get<Competency>(`${this.baseUrl}/${id}`).pipe(
+    return this.http.get<CompetencyResponseDTO>(`${this.baseUrl}/${id}`).pipe(
+      map(dto => {
+        const competency = this.toCompetencyModel(dto);
+        this.competencyCache.set(competency.competencyId, competency);
+        return competency;
+      }),
       catchError(this.handleError)
     );
   }
@@ -64,7 +161,8 @@ export class CompetencyService {
       this.mockCompetencies.push(newComp);
       return of(newComp);
     }
-    return this.http.post<Competency>(this.baseUrl, competency).pipe(
+    return this.http.post<CompetencyResponseDTO>(this.baseUrl, this.toCompetencyRequest(competency)).pipe(
+      map(dto => this.toCompetencyModel(dto)),
       catchError(this.handleError)
     );
   }
@@ -78,7 +176,8 @@ export class CompetencyService {
       this.mockCompetencies[index] = { ...competency, competencyId: id };
       return of(this.mockCompetencies[index]);
     }
-    return this.http.put<Competency>(`${this.baseUrl}/${id}`, competency).pipe(
+    return this.http.put<CompetencyResponseDTO>(`${this.baseUrl}/${id}`, this.toCompetencyRequest(competency)).pipe(
+      map(dto => this.toCompetencyModel(dto)),
       catchError(this.handleError)
     );
   }
@@ -105,7 +204,8 @@ export class CompetencyService {
       this.mockFrameworks.push(newFw);
       return of(newFw);
     }
-    return this.http.post<CompetencyFramework>(`${this.baseUrl}/frameworks`, framework).pipe(
+    return this.http.post<CompetencyFrameworkResponseDTO>(`${this.baseUrl}/frameworks`, this.toFrameworkRequest(framework)).pipe(
+      map(dto => this.toFrameworkModel(dto)),
       catchError(this.handleError)
     );
   }
@@ -114,7 +214,8 @@ export class CompetencyService {
     if (environment.useMock) {
       return of(this.mockFrameworks.filter(f => f.role.toLowerCase() === role.toLowerCase()));
     }
-    return this.http.get<CompetencyFramework[]>(`${this.baseUrl}/frameworks/role/${role}`).pipe(
+    return this.http.get<CompetencyFrameworkResponseDTO[]>(`${this.baseUrl}/frameworks/role/${role}`).pipe(
+      map(list => list.map(dto => this.toFrameworkModel(dto))),
       catchError(this.handleError)
     );
   }
@@ -137,7 +238,8 @@ export class CompetencyService {
       this.mockEmployeeCompetencies.push(newEc);
       return of(newEc);
     }
-    return this.http.post<EmployeeCompetency>(`${this.baseUrl}/employee-levels`, employeeCompetency).pipe(
+    return this.http.post<EmployeeCompetencyResponseDTO>(`${this.baseUrl}/employee-levels`, this.toEmployeeCompetencyRequest(employeeCompetency)).pipe(
+      map(dto => this.toEmployeeCompetencyModel(dto)),
       catchError(this.handleError)
     );
   }

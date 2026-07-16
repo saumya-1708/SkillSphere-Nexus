@@ -21,6 +21,16 @@ public class EmployeeCompetency {
     @Column(nullable = false)
     private Integer currentLevel;
 
+    public EmployeeCompetency() {
+    }
+
+    public EmployeeCompetency(UUID employeeCompetencyId, UUID employeeId, Competency competency, Integer currentLevel) {
+        this.employeeCompetencyId = employeeCompetencyId;
+        this.employeeId = employeeId;
+        this.competency = competency;
+        this.currentLevel = currentLevel;
+    }
+
     // Getters and Setters
     public UUID getEmployeeCompetencyId() { return employeeCompetencyId; }
     public void setEmployeeCompetencyId(UUID employeeCompetencyId) { this.employeeCompetencyId = employeeCompetencyId; }

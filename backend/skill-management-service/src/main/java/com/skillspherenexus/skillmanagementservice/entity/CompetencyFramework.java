@@ -21,6 +21,16 @@ public class CompetencyFramework {
     @Column(nullable = false)
     private Integer requiredLevel;
 
+    public CompetencyFramework() {
+    }
+
+    public CompetencyFramework(UUID frameworkId, String role, Competency competency, Integer requiredLevel) {
+        this.frameworkId = frameworkId;
+        this.role = role;
+        this.competency = competency;
+        this.requiredLevel = requiredLevel;
+    }
+
     // Getters and Setters
     public UUID getFrameworkId() { return frameworkId; }
     public void setFrameworkId(UUID frameworkId) { this.frameworkId = frameworkId; }

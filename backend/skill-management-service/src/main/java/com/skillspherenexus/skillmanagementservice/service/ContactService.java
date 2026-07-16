@@ -2,17 +2,18 @@ package com.skillspherenexus.skillmanagementservice.service;
 
 import java.util.List;
 
-import com.skillspherenexus.skillmanagementservice.entity.Contact;
+import com.skillspherenexus.skillmanagementservice.dto.ContactRequestDTO;
+import com.skillspherenexus.skillmanagementservice.dto.ContactResponseDTO;
 
 public interface ContactService {
 
-    Contact saveContact(Contact contact);
+    ContactResponseDTO saveContact(ContactRequestDTO request);
 
-    List<Contact> getAllContacts();
+    List<ContactResponseDTO> getAllContacts();
 
-    Contact getContactById(Integer contactId);
+    ContactResponseDTO getContactById(Integer contactId);
 
-    Contact updateContact(Integer contactId, Contact contact);
+    ContactResponseDTO updateContact(Integer contactId, ContactRequestDTO request);
 
     void deleteContact(Integer contactId);
 }

@@ -3,33 +3,32 @@ package com.skillspherenexus.skillmanagementservice.service;
 import java.util.List;
 import java.util.UUID;
 
+import com.skillspherenexus.skillmanagementservice.dto.CompetencyFrameworkRequestDTO;
+import com.skillspherenexus.skillmanagementservice.dto.CompetencyFrameworkResponseDTO;
+import com.skillspherenexus.skillmanagementservice.dto.CompetencyRequestDTO;
+import com.skillspherenexus.skillmanagementservice.dto.CompetencyResponseDTO;
+import com.skillspherenexus.skillmanagementservice.dto.EmployeeCompetencyRequestDTO;
+import com.skillspherenexus.skillmanagementservice.dto.EmployeeCompetencyResponseDTO;
 import com.skillspherenexus.skillmanagementservice.dto.GapResult;
-import com.skillspherenexus.skillmanagementservice.entity.Competency;
-import com.skillspherenexus.skillmanagementservice.entity.CompetencyFramework;
-import com.skillspherenexus.skillmanagementservice.entity.EmployeeCompetency;
 
 public interface CompetencyService {
 
-    // Competency
-    Competency create(Competency competency);
+    CompetencyResponseDTO create(CompetencyRequestDTO request);
 
-    List<Competency> getAll();
+    List<CompetencyResponseDTO> getAll();
 
-    Competency getById(UUID id);
+    CompetencyResponseDTO getById(UUID id);
 
-    Competency update(UUID id, Competency competency);
+    CompetencyResponseDTO update(UUID id, CompetencyRequestDTO request);
 
     void delete(UUID id);
 
-    // Competency Framework
-    CompetencyFramework defineFrameworkRequirement(CompetencyFramework framework);
+    CompetencyFrameworkResponseDTO defineFrameworkRequirement(CompetencyFrameworkRequestDTO request);
 
-    List<CompetencyFramework> getFrameworkForRole(String role);
+    List<CompetencyFrameworkResponseDTO> getFrameworkForRole(String role);
 
-    // Employee Competency
-    EmployeeCompetency recordEmployeeLevel(EmployeeCompetency employeeCompetency);
+    EmployeeCompetencyResponseDTO recordEmployeeLevel(EmployeeCompetencyRequestDTO request);
 
-    // Gap Analysis
     List<GapResult> analyzeGap(UUID employeeId, String targetRole);
 
 }

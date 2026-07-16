@@ -17,7 +17,7 @@ import com.skillspherenexus.skillmanagementservice.dto.AssessmentResponseDTO;
 import com.skillspherenexus.skillmanagementservice.service.AssessmentService;
 
 @RestController
-@RequestMapping("/assessments")
+@RequestMapping("/api/assessments")
 public class AssessmentController {
 
     @Autowired

@@ -12,35 +12,36 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.skillspherenexus.skillmanagementservice.entity.EmployeeSkill;
+import com.skillspherenexus.skillmanagementservice.dto.EmployeeSkillRequestDTO;
+import com.skillspherenexus.skillmanagementservice.dto.EmployeeSkillResponseDTO;
 import com.skillspherenexus.skillmanagementservice.service.EmployeeSkillService;
 
 @RestController
-@RequestMapping("/employeeSkills")
+@RequestMapping("/api/employeeSkills")
 public class EmployeeSkillController {
 
     @Autowired
     private EmployeeSkillService employeeSkillService;
 
     @PostMapping
-    public EmployeeSkill saveEmployeeSkill(@RequestBody EmployeeSkill employeeSkill) {
-        return employeeSkillService.saveEmployeeSkill(employeeSkill);
+    public EmployeeSkillResponseDTO saveEmployeeSkill(@RequestBody EmployeeSkillRequestDTO request) {
+        return employeeSkillService.saveEmployeeSkill(request);
     }
 
     @GetMapping
-    public List<EmployeeSkill> getAllEmployeeSkills() {
+    public List<EmployeeSkillResponseDTO> getAllEmployeeSkills() {
         return employeeSkillService.getAllEmployeeSkills();
     }
 
     @GetMapping("/{id}")
-    public EmployeeSkill getEmployeeSkillById(@PathVariable Integer id) {
+    public EmployeeSkillResponseDTO getEmployeeSkillById(@PathVariable Integer id) {
         return employeeSkillService.getEmployeeSkillById(id);
     }
 
     @PutMapping("/{id}")
-    public EmployeeSkill updateEmployeeSkill(@PathVariable Integer id,
-                                             @RequestBody EmployeeSkill employeeSkill) {
-        return employeeSkillService.updateEmployeeSkill(id, employeeSkill);
+    public EmployeeSkillResponseDTO updateEmployeeSkill(@PathVariable Integer id,
+                                                        @RequestBody EmployeeSkillRequestDTO request) {
+        return employeeSkillService.updateEmployeeSkill(id, request);
     }
 
     @DeleteMapping("/{id}")

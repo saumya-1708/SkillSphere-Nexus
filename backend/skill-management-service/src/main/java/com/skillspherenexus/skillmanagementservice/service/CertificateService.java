@@ -4,19 +4,20 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.skillspherenexus.skillmanagementservice.entity.Certificate;
+import com.skillspherenexus.skillmanagementservice.dto.CertificateRequestDTO;
+import com.skillspherenexus.skillmanagementservice.dto.CertificateResponseDTO;
 
 public interface CertificateService {
 
-    Certificate saveCertificate(Certificate certificate);
+    CertificateResponseDTO saveCertificate(CertificateRequestDTO request);
 
-    List<Certificate> getAllCertificates();
+    List<CertificateResponseDTO> getAllCertificates();
 
-    List<Certificate> getCertificatesByEmployee(UUID empid);
+    List<CertificateResponseDTO> getCertificatesByEmployee(UUID empid);
 
-    Optional<Certificate> getCertificateById(UUID id);
+    Optional<CertificateResponseDTO> getCertificateById(UUID id);
 
-    Certificate updateCertificate(UUID id, Certificate certificate);
+    CertificateResponseDTO updateCertificate(UUID id, CertificateRequestDTO request);
 
     void deleteCertificate(UUID id);
 }

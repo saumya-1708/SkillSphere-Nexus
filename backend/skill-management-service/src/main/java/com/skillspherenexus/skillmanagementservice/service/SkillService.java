@@ -2,17 +2,18 @@ package com.skillspherenexus.skillmanagementservice.service;
 
 import java.util.List;
 
-import com.skillspherenexus.skillmanagementservice.entity.Skill;
+import com.skillspherenexus.skillmanagementservice.dto.SkillRequestDTO;
+import com.skillspherenexus.skillmanagementservice.dto.SkillResponseDTO;
 
 public interface SkillService {
 
-    Skill saveSkill(Skill skill);
+    SkillResponseDTO saveSkill(SkillRequestDTO request);
 
-    List<Skill> getAllSkills();
+    List<SkillResponseDTO> getAllSkills();
 
-    Skill getSkillById(Integer skillId);
+    SkillResponseDTO getSkillById(Integer skillId);
 
-    Skill updateSkill(Integer skillId, Skill skill);
+    SkillResponseDTO updateSkill(Integer skillId, SkillRequestDTO request);
 
     void deleteSkill(Integer skillId);
 }
