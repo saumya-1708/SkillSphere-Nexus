@@ -1,7 +1,6 @@
 package com.skillspherenexus.skillmanagementservice.controller;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,7 @@ import com.skillspherenexus.skillmanagementservice.dto.CertificateResponseDTO;
 import com.skillspherenexus.skillmanagementservice.service.CertificateService;
 
 @RestController
-@RequestMapping("/api/certificates")
+@RequestMapping("/api/certificate")
 public class CertificateController {
 
     @Autowired
@@ -36,19 +35,19 @@ public class CertificateController {
     }
 
     @GetMapping("/employee/{empid}")
-    public ResponseEntity<List<CertificateResponseDTO>> getCertificatesByEmployee(@PathVariable UUID empid) {
+    public ResponseEntity<List<CertificateResponseDTO>> getCertificatesByEmployee(@PathVariable Integer empid) {
         return ResponseEntity.ok(certificateService.getCertificatesByEmployee(empid));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CertificateResponseDTO> getCertificateById(@PathVariable UUID id) {
+    public ResponseEntity<CertificateResponseDTO> getCertificateById(@PathVariable Integer id) {
         return certificateService.getCertificateById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CertificateResponseDTO> updateCertificate(@PathVariable UUID id,
+    public ResponseEntity<CertificateResponseDTO> updateCertificate(@PathVariable Integer id,
                                                                     @RequestBody CertificateRequestDTO request) {
         try {
             return ResponseEntity.ok(certificateService.updateCertificate(id, request));
@@ -58,7 +57,7 @@ public class CertificateController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCertificate(@PathVariable UUID id) {
+    public ResponseEntity<String> deleteCertificate(@PathVariable Integer id) {
         certificateService.deleteCertificate(id);
         return ResponseEntity.ok("Certificate deleted successfully");
     }

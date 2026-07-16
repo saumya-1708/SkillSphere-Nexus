@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Entity
 @Table(name = "certificates")
@@ -16,12 +15,11 @@ import java.util.UUID;
 public class Certificate {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "certid", columnDefinition = "UUID")
-    private UUID certid; // Blueprint key 'certid' as UUID [cite: 57, 82]
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer certid;
 
     @Column(name = "empid", nullable = false)
-    private UUID empid; // Links certificate to a specific Employee
+    private Integer empid; // Links certificate to a specific Employee
 
     @Column(name = "name", nullable = false)
     private String name; // Certificate name [cite: 58, 82]

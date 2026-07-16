@@ -1,7 +1,6 @@
 package com.skillspherenexus.skillmanagementservice.dto;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,7 +10,7 @@ import lombok.Data;
 public class CertificateRequestDTO {
 
     @NotNull
-    private UUID empid;
+    private Integer empid;
 
     @NotBlank
     private String name;

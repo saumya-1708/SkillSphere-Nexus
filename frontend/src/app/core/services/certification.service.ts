@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class CertificationService {
-  private readonly baseUrl = `${environment.apiUrl}/certificates`;
+  private readonly baseUrl = `${environment.apiUrl}/certificate`;
 
   private mockCertificates: Certificate[] = [
     {

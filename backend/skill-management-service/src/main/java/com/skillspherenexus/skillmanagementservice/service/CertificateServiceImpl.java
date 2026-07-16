@@ -3,7 +3,7 @@ package com.skillspherenexus.skillmanagementservice.service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,33 +41,30 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     @Override
-    public List<CertificateResponseDTO> getCertificatesByEmployee(UUID empid) {
+    public List<CertificateResponseDTO> getCertificatesByEmployee(Integer empid) {
         List<Certificate> certificates = certificateRepository.findByEmpid(empid);
         certificates.forEach(this::validateExpiryStatus);
         return certificates.stream().map(this::convertToResponse).toList();
     }
 
     @Override
-    public Optional<CertificateResponseDTO> getCertificateById(UUID id) {
+    public Optional<CertificateResponseDTO> getCertificateById(Integer id) {
         Optional<Certificate> cert = certificateRepository.findById(id);
         cert.ifPresent(this::validateExpiryStatus);
         return cert.map(this::convertToResponse);
     }
 
     @Override
-    public void deleteCertificate(UUID id) {
+    public void deleteCertificate(Integer id) {
         certificateRepository.deleteById(id);
     }
 
     @Override
-    public CertificateResponseDTO updateCertificate(UUID id, CertificateRequestDTO request) {
+    public CertificateResponseDTO updateCertificate(Integer id, CertificateRequestDTO request) {
 
-        if (!certificateRepository.existsById(id)) {
-            throw new RuntimeException("Certificate not found with id: " + id);
-        }
+        Certificate certificate = certificateRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Certificate not found"));
 
-        Certificate certificate = new Certificate();
-        certificate.setCertid(id);
         certificate.setEmpid(request.getEmpid());
         certificate.setName(request.getName());
         certificate.setIssuingOrganization(request.getIssuingOrganization());

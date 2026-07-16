@@ -75,6 +75,38 @@
   margin-top: 0.15rem;
 }
 
+/* Filter Tabs */
+.filter-tabs {
+  display: flex;
+  padding: 0.35rem;
+  gap: 0.25rem;
+  width: fit-content;
+  border-radius: var(--radius-md);
+}
+
+.tab-btn {
+  background: transparent;
+  color: var(--text-secondary);
+  border: none;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+}
+
+.tab-btn.active {
+  background: var(--accent-primary);
+  color: #fff;
+  box-shadow: var(--accent-primary-glow) 0 2px 8px;
+}
+
 /* Gap Progress Bars */
 .gap-bars-list {
   display: flex;
