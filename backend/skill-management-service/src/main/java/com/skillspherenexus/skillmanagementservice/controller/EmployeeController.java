@@ -25,7 +25,6 @@ public class EmployeeController {
 
     @PostMapping
     public EmployeeResponseDTO saveEmployee(@RequestBody EmployeeRequestDTO request) {
-        System.out.println("Controller reached");
         return employeeService.saveEmployee(request);
     }
 
