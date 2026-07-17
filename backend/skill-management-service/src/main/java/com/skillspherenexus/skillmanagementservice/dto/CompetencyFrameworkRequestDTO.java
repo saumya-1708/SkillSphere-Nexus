@@ -1,6 +1,5 @@
 package com.skillspherenexus.skillmanagementservice.dto;
 
-import java.util.UUID;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,7 +12,7 @@ public class CompetencyFrameworkRequestDTO {
     private String role;
 
     @NotNull
-    private UUID competencyId;
+    private Integer competencyId;
 
     @NotNull
     private Integer requiredLevel;

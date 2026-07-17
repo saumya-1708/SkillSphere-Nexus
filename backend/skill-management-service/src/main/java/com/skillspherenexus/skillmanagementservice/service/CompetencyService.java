@@ -1,7 +1,6 @@
 package com.skillspherenexus.skillmanagementservice.service;
 
 import java.util.List;
-import java.util.UUID;
 
 import com.skillspherenexus.skillmanagementservice.dto.CompetencyFrameworkRequestDTO;
 import com.skillspherenexus.skillmanagementservice.dto.CompetencyFrameworkResponseDTO;
@@ -17,11 +16,11 @@ public interface CompetencyService {
 
     List<CompetencyResponseDTO> getAll();
 
-    CompetencyResponseDTO getById(UUID id);
+    CompetencyResponseDTO getById(Integer id);
 
-    CompetencyResponseDTO update(UUID id, CompetencyRequestDTO request);
+    CompetencyResponseDTO update(Integer id, CompetencyRequestDTO request);
 
-    void delete(UUID id);
+    void delete(Integer id);
 
     CompetencyFrameworkResponseDTO defineFrameworkRequirement(CompetencyFrameworkRequestDTO request);
 
@@ -29,6 +28,6 @@ public interface CompetencyService {
 
     EmployeeCompetencyResponseDTO recordEmployeeLevel(EmployeeCompetencyRequestDTO request);
 
-    List<GapResult> analyzeGap(UUID employeeId, String targetRole);
+    List<GapResult> analyzeGap(Integer employeeId, String targetRole);
 
 }

@@ -1,6 +1,6 @@
 export interface Certificate {
-  certid: string; // UUID
-  empid: string; // UUID
+  certid: number; 
+  empid: number; 
   name: string;
   issuingOrganization: string;
   issueDate: string; // ISO Date String

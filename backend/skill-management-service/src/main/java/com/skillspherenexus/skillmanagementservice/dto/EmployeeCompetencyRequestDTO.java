@@ -1,6 +1,5 @@
 package com.skillspherenexus.skillmanagementservice.dto;
 
-import java.util.UUID;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -9,10 +8,10 @@ import lombok.Data;
 public class EmployeeCompetencyRequestDTO {
 
     @NotNull
-    private UUID employeeId;
+    private Integer employeeId;
 
     @NotNull
-    private UUID competencyId;
+    private Integer competencyId;
 
     @NotNull
     private Integer currentLevel;

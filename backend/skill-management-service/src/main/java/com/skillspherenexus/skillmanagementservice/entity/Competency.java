@@ -2,15 +2,14 @@ package com.skillspherenexus.skillmanagementservice.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import java.util.UUID;
 
 @Entity
 @Table(name = "competencies")
 public class Competency {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID competencyId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer competencyId;
 
     @NotBlank(message = "Name is required")
     @Column(nullable = false, unique = true)
@@ -28,8 +27,8 @@ public class Competency {
     private Integer maxLevel = 10;
 
     // Getters and Setters
-    public UUID getCompetencyId() { return competencyId; }
-    public void setCompetencyId(UUID competencyId) { this.competencyId = competencyId; }
+    public Integer getCompetencyId() { return competencyId; }
+    public void setCompetencyId(Integer competencyId) { this.competencyId = competencyId; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }

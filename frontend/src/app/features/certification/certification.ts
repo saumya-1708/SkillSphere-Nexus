@@ -124,7 +124,7 @@ export class CertificationFeature implements OnInit {
     }
   }
 
-  onDelete(id: string): void {
+  onDelete(id: number): void {
     this.confirm.ask(
       'Remove Certificate?',
       'Are you sure you want to delete this professional certification record?'

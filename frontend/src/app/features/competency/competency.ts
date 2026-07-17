@@ -161,7 +161,7 @@ export class CompetencyFeature implements OnInit {
     }
   }
 
-  onDeleteComp(id: string): void {
+  onDeleteComp(id: number): void {
     this.confirm.ask(
       'Remove Competency?',
       'Are you sure you want to delete this competency from the global registry?'

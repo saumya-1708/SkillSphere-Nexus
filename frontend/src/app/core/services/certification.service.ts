@@ -13,8 +13,8 @@ export class CertificationService {
 
   private mockCertificates: Certificate[] = [
     {
-      certid: 'cert1-uuid',
-      empid: '101',
+      certid: 1,
+      empid: 101,
       name: 'Oracle Certified Professional: Java SE 17 Developer',
       issuingOrganization: 'Oracle',
       issueDate: '2025-01-15',
@@ -22,8 +22,8 @@ export class CertificationService {
       status: 'Valid'
     },
     {
-      certid: 'cert2-uuid',
-      empid: '101',
+      certid: 2,
+      empid: 101,
       name: 'Spring Certified Professional',
       issuingOrganization: 'VMware',
       issueDate: '2023-06-20',
@@ -31,8 +31,8 @@ export class CertificationService {
       status: 'Valid'
     },
     {
-      certid: 'cert3-uuid',
-      empid: '102',
+      certid: 3,
+      empid: 102,
       name: 'AWS Certified Solutions Architect - Professional',
       issuingOrganization: 'Amazon Web Services',
       issueDate: '2024-03-10',
@@ -40,8 +40,8 @@ export class CertificationService {
       status: 'Valid'
     },
     {
-      certid: 'cert4-uuid',
-      empid: '103',
+      certid: 4,
+      empid: 103,
       name: 'Certified ScrumMaster (CSM)',
       issuingOrganization: 'Scrum Alliance',
       issueDate: '2022-09-05',
@@ -61,7 +61,7 @@ export class CertificationService {
     );
   }
 
-  getById(id: string): Observable<Certificate> {
+  getById(id: number): Observable<Certificate> {
     if (environment.useMock) {
       const cert = this.mockCertificates.find(c => c.certid === id);
       return cert ? of({ ...cert }) : throwError(() => new Error('Certificate not found'));
@@ -71,9 +71,9 @@ export class CertificationService {
     );
   }
 
-  getCertificatesByEmployee(empid: string): Observable<Certificate[]> {
+  getCertificatesByEmployee(empid: number): Observable<Certificate[]> {
     if (environment.useMock) {
-      return of(this.mockCertificates.filter(c => c.empid.toString() === empid.toString()));
+      return of(this.mockCertificates.filter(c => c.empid === empid));
     }
     return this.http.get<Certificate[]>(`${this.baseUrl}/employee/${empid}`).pipe(
       catchError(this.handleError)
@@ -82,7 +82,7 @@ export class CertificationService {
 
   create(certificate: Certificate): Observable<Certificate> {
     if (environment.useMock) {
-      const newId = 'cert-' + Math.random().toString(36).substr(2, 9);
+      const newId =this.mockCertificates.length > 0 ? Math.max(...this.mockCertificates.map(c => c.certid ?? 0)) + 1: 1;
       
       // Calculate status based on current date
       const today = new Date();
@@ -98,7 +98,7 @@ export class CertificationService {
     );
   }
 
-  update(id: string, certificate: Certificate): Observable<Certificate> {
+  update(id: number, certificate: Certificate): Observable<Certificate> {
     if (environment.useMock) {
       const index = this.mockCertificates.findIndex(c => c.certid === id);
       if (index === -1) {
@@ -117,7 +117,7 @@ export class CertificationService {
     );
   }
 
-  delete(id: string): Observable<string> {
+  delete(id: number): Observable<string> {
     if (environment.useMock) {
       const index = this.mockCertificates.findIndex(c => c.certid === id);
       if (index === -1) {

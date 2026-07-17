@@ -22,30 +22,30 @@ import { environment } from '../../../environments/environment';
 })
 export class CompetencyService {
   private readonly baseUrl = `${environment.apiUrl}/competencies`;
-  private readonly competencyCache = new Map<string, Competency>();
+  private readonly competencyCache = new Map<number, Competency>();
 
   // Realistic mock databases
   private mockCompetencies: Competency[] = [
-    { competencyId: 'c1-uuid', name: 'Software Architecture', category: 'TECHNICAL', description: 'System modeling, design patterns, microservices architectures', maxLevel: 5 },
-    { competencyId: 'c2-uuid', name: 'Problem Solving', category: 'SOFT', description: 'Analytical reasoning, algorithms complexity, logical thinking', maxLevel: 5 },
-    { competencyId: 'c3-uuid', name: 'Cloud Engineering', category: 'TECHNICAL', description: 'AWS, Azure, Docker, Kubernetes, infrastructure as code', maxLevel: 5 },
-    { competencyId: 'c4-uuid', name: 'Investment Banking', category: 'DOMAIN', description: 'Mergers and acquisitions, asset management, capital markets knowledge', maxLevel: 5 },
-    { competencyId: 'c5-uuid', name: 'Technical Leadership', category: 'SOFT', description: 'Mentoring, architecture governance, conflict resolution', maxLevel: 5 }
+    { competencyId: 1, name: 'Software Architecture', category: 'TECHNICAL', description: 'System modeling, design patterns, microservices architectures', maxLevel: 5 },
+    { competencyId: 2, name: 'Problem Solving', category: 'SOFT', description: 'Analytical reasoning, algorithms complexity, logical thinking', maxLevel: 5 },
+    { competencyId: 3, name: 'Cloud Engineering', category: 'TECHNICAL', description: 'AWS, Azure, Docker, Kubernetes, infrastructure as code', maxLevel: 5 },
+    { competencyId: 4, name: 'Investment Banking', category: 'DOMAIN', description: 'Mergers and acquisitions, asset management, capital markets knowledge', maxLevel: 5 },
+    { competencyId: 5, name: 'Technical Leadership', category: 'SOFT', description: 'Mentoring, architecture governance, conflict resolution', maxLevel: 5 }
   ];
 
   private mockFrameworks: CompetencyFramework[] = [
-    { frameworkId: 'f1-uuid', role: 'Senior Java Developer', competency: this.mockCompetencies[0], requiredLevel: 4 },
-    { frameworkId: 'f2-uuid', role: 'Senior Java Developer', competency: this.mockCompetencies[1], requiredLevel: 4 },
-    { frameworkId: 'f3-uuid', role: 'Senior Java Developer', competency: this.mockCompetencies[2], requiredLevel: 3 },
-    { frameworkId: 'f4-uuid', role: 'Principal Architect', competency: this.mockCompetencies[0], requiredLevel: 5 },
-    { frameworkId: 'f5-uuid', role: 'Principal Architect', competency: this.mockCompetencies[4], requiredLevel: 5 }
+    { frameworkId: 1, role: 'Senior Java Developer', competency: this.mockCompetencies[0], requiredLevel: 4 },
+    { frameworkId: 2, role: 'Senior Java Developer', competency: this.mockCompetencies[1], requiredLevel: 4 },
+    { frameworkId: 3, role: 'Senior Java Developer', competency: this.mockCompetencies[2], requiredLevel: 3 },
+    { frameworkId: 4, role: 'Principal Architect', competency: this.mockCompetencies[0], requiredLevel: 5 },
+    { frameworkId: 5, role: 'Principal Architect', competency: this.mockCompetencies[4], requiredLevel: 5 }
   ];
 
   private mockEmployeeCompetencies: EmployeeCompetency[] = [
-    { employeeCompetencyId: 'ec1-uuid', employeeId: '101', competency: this.mockCompetencies[0], currentLevel: 3 },
-    { employeeCompetencyId: 'ec2-uuid', employeeId: '101', competency: this.mockCompetencies[1], currentLevel: 4 },
-    { employeeCompetencyId: 'ec3-uuid', employeeId: '101', competency: this.mockCompetencies[2], currentLevel: 2 },
-    { employeeCompetencyId: 'ec4-uuid', employeeId: '102', competency: this.mockCompetencies[0], currentLevel: 5 }
+    { employeeCompetencyId: 1, employeeId: 101, competency: this.mockCompetencies[0], currentLevel: 3 },
+    { employeeCompetencyId: 2, employeeId: 101, competency: this.mockCompetencies[1], currentLevel: 4 },
+    { employeeCompetencyId: 3, employeeId: 101, competency: this.mockCompetencies[2], currentLevel: 2 },
+    { employeeCompetencyId: 4, employeeId: 102, competency: this.mockCompetencies[0], currentLevel: 5 }
   ];
 
   constructor(private http: HttpClient) {}
@@ -139,7 +139,7 @@ export class CompetencyService {
     );
   }
 
-  getById(id: string): Observable<Competency> {
+  getById(id: number): Observable<Competency> {
     if (environment.useMock) {
       const comp = this.mockCompetencies.find(c => c.competencyId === id);
       return comp ? of({ ...comp }) : throwError(() => new Error('Competency not found'));
@@ -156,7 +156,7 @@ export class CompetencyService {
 
   create(competency: Competency): Observable<Competency> {
     if (environment.useMock) {
-      const newId = competency.competencyId || 'c-' + Math.random().toString(36).substr(2, 9);
+      const newId =this.mockCompetencies.length > 0 ? Math.max(...this.mockCompetencies.map(c => c.competencyId ?? 0)) + 1: 1;
       const newComp = { ...competency, competencyId: newId };
       this.mockCompetencies.push(newComp);
       return of(newComp);
@@ -167,7 +167,7 @@ export class CompetencyService {
     );
   }
 
-  update(id: string, competency: Competency): Observable<Competency> {
+  update(id: number, competency: Competency): Observable<Competency> {
     if (environment.useMock) {
       const index = this.mockCompetencies.findIndex(c => c.competencyId === id);
       if (index === -1) {
@@ -182,7 +182,7 @@ export class CompetencyService {
     );
   }
 
-  delete(id: string): Observable<void> {
+  delete(id: number): Observable<void> {
     if (environment.useMock) {
       const index = this.mockCompetencies.findIndex(c => c.competencyId === id);
       if (index === -1) {
@@ -199,7 +199,7 @@ export class CompetencyService {
   // --- Competency Framework ---
   defineFrameworkRequirement(framework: CompetencyFramework): Observable<CompetencyFramework> {
     if (environment.useMock) {
-      const newId = 'f-' + Math.random().toString(36).substr(2, 9);
+       const newId =this.mockFrameworks.length > 0 ? Math.max(...this.mockFrameworks.map(f => f.frameworkId ?? 0)) + 1 : 1;
       const newFw = { ...framework, frameworkId: newId };
       this.mockFrameworks.push(newFw);
       return of(newFw);
@@ -223,7 +223,7 @@ export class CompetencyService {
   // --- Employee Competency ---
   recordEmployeeLevel(employeeCompetency: EmployeeCompetency): Observable<EmployeeCompetency> {
     if (environment.useMock) {
-      const newId = 'ec-' + Math.random().toString(36).substr(2, 9);
+      const newId = this.mockEmployeeCompetencies.length + 1;
       const newEc = { ...employeeCompetency, employeeCompetencyId: newId };
       
       // Update existing or push

@@ -1,7 +1,6 @@
 package com.skillspherenexus.skillmanagementservice.service;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -54,14 +53,14 @@ public class CompetencyServiceImpl implements CompetencyService {
     }
 
     @Override
-    public CompetencyResponseDTO getById(UUID id) {
+    public CompetencyResponseDTO getById(Integer id) {
         return competencyRepository.findById(id)
                 .map(this::convertToResponse)
                 .orElseThrow(() -> new RuntimeException("Competency not found: " + id));
     }
 
     @Override
-    public CompetencyResponseDTO update(UUID id, CompetencyRequestDTO request) {
+    public CompetencyResponseDTO update(Integer id, CompetencyRequestDTO request) {
 
         Competency existing = competencyRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Competency not found: " + id));
@@ -75,7 +74,7 @@ public class CompetencyServiceImpl implements CompetencyService {
     }
 
     @Override
-    public void delete(UUID id) {
+    public void delete(Integer id) {
         Competency existing = competencyRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Competency not found: " + id));
         competencyRepository.delete(existing);
@@ -102,8 +101,8 @@ public class CompetencyServiceImpl implements CompetencyService {
     @Override
     public EmployeeCompetencyResponseDTO recordEmployeeLevel(EmployeeCompetencyRequestDTO request) {
 
-        UUID employeeId = request.getEmployeeId();
-        UUID competencyId = request.getCompetencyId();
+        Integer employeeId = request.getEmployeeId();
+        Integer competencyId = request.getCompetencyId();
 
         EmployeeCompetency existing = employeeCompetencyRepository
                 .findByEmployeeIdAndCompetency_CompetencyId(employeeId, competencyId)
@@ -118,13 +117,13 @@ public class CompetencyServiceImpl implements CompetencyService {
     }
 
     @Override
-    public List<GapResult> analyzeGap(UUID employeeId, String targetRole) {
+    public List<GapResult> analyzeGap(Integer employeeId, String targetRole) {
 
         List<CompetencyFramework> requirements = frameworkRepository.findByRole(targetRole);
 
         return requirements.stream()
                 .map(req -> {
-                    UUID competencyId = req.getCompetency().getCompetencyId();
+                    Integer competencyId = req.getCompetency().getCompetencyId();
 
                     int currentLevel = employeeCompetencyRepository
                             .findByEmployeeIdAndCompetency_CompetencyId(employeeId, competencyId)

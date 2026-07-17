@@ -1,7 +1,6 @@
 package com.skillspherenexus.skillmanagementservice.controller;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,17 +44,17 @@ public class CompetencyController {
     }
 
     @GetMapping("/{id}")
-    public CompetencyResponseDTO getById(@PathVariable UUID id) {
+    public CompetencyResponseDTO getById(@PathVariable Integer id) {
         return competencyService.getById(id);
     }
 
     @PutMapping("/{id}")
-    public CompetencyResponseDTO update(@PathVariable UUID id, @RequestBody CompetencyRequestDTO request) {
+    public CompetencyResponseDTO update(@PathVariable Integer id, @RequestBody CompetencyRequestDTO request) {
         return competencyService.update(id, request);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id) {
+    public void delete(@PathVariable Integer id) {
         competencyService.delete(id);
     }
 
@@ -75,7 +74,7 @@ public class CompetencyController {
     }
 
     @GetMapping("/gap-analysis")
-    public List<GapResult> getGapAnalysis(@RequestParam UUID employeeId, @RequestParam String role) {
+    public List<GapResult> getGapAnalysis(@RequestParam Integer employeeId, @RequestParam String role) {
         return competencyService.analyzeGap(employeeId, role);
     }
 }

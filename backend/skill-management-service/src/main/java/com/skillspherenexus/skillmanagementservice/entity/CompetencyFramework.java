@@ -1,15 +1,14 @@
 package com.skillspherenexus.skillmanagementservice.entity;
 
 import jakarta.persistence.*;
-import java.util.UUID;
 
 @Entity
 @Table(name = "competency_frameworks")
 public class CompetencyFramework {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID frameworkId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer frameworkId;
 
     @Column(nullable = false)
     private String role;
@@ -24,7 +23,7 @@ public class CompetencyFramework {
     public CompetencyFramework() {
     }
 
-    public CompetencyFramework(UUID frameworkId, String role, Competency competency, Integer requiredLevel) {
+    public CompetencyFramework(Integer frameworkId, String role, Competency competency, Integer requiredLevel) {
         this.frameworkId = frameworkId;
         this.role = role;
         this.competency = competency;
@@ -32,8 +31,8 @@ public class CompetencyFramework {
     }
 
     // Getters and Setters
-    public UUID getFrameworkId() { return frameworkId; }
-    public void setFrameworkId(UUID frameworkId) { this.frameworkId = frameworkId; }
+    public Integer getFrameworkId() { return frameworkId; }
+    public void setFrameworkId(Integer frameworkId) { this.frameworkId = frameworkId; }
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }

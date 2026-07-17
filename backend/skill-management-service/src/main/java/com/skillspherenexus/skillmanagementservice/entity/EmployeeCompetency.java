@@ -1,18 +1,17 @@
 package com.skillspherenexus.skillmanagementservice.entity;
 
 import jakarta.persistence.*;
-import java.util.UUID;
 
 @Entity
 @Table(name = "employee_competencies")
 public class EmployeeCompetency {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID employeeCompetencyId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer employeeCompetencyId;
 
     @Column(nullable = false)
-    private UUID employeeId;
+    private Integer employeeId;
 
     @ManyToOne
     @JoinColumn(name = "competency_id", nullable = false)
@@ -24,7 +23,7 @@ public class EmployeeCompetency {
     public EmployeeCompetency() {
     }
 
-    public EmployeeCompetency(UUID employeeCompetencyId, UUID employeeId, Competency competency, Integer currentLevel) {
+    public EmployeeCompetency(Integer employeeCompetencyId, Integer employeeId, Competency competency, Integer currentLevel) {
         this.employeeCompetencyId = employeeCompetencyId;
         this.employeeId = employeeId;
         this.competency = competency;
@@ -32,11 +31,11 @@ public class EmployeeCompetency {
     }
 
     // Getters and Setters
-    public UUID getEmployeeCompetencyId() { return employeeCompetencyId; }
-    public void setEmployeeCompetencyId(UUID employeeCompetencyId) { this.employeeCompetencyId = employeeCompetencyId; }
+    public Integer getEmployeeCompetencyId() { return employeeCompetencyId; }
+    public void setEmployeeCompetencyId(Integer employeeCompetencyId) { this.employeeCompetencyId = employeeCompetencyId; }
 
-    public UUID getEmployeeId() { return employeeId; }
-    public void setEmployeeId(UUID employeeId) { this.employeeId = employeeId; }
+    public Integer getEmployeeId() { return employeeId; }
+    public void setEmployeeId(Integer employeeId) { this.employeeId = employeeId; }
 
     public Competency getCompetency() { return competency; }
     public void setCompetency(Competency competency) { this.competency = competency; }
