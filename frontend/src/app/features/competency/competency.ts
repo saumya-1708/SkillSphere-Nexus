@@ -104,16 +104,27 @@ export class CompetencyFeature implements OnInit {
   }
 
   loadFrameworks(): void {
-    // Collect all frameworks for predefined roles to list them
-    this.frameworks.set([]);
-    this.availableRoles.forEach(role => {
-      this.compService.getFrameworkForRole(role).subscribe({
-        next: (list) => {
-          this.frameworks.update(current => [...current, ...list]);
-        }
-      });
+  console.log("Loading frameworks...");
+
+  this.frameworks.set([]);
+
+  this.availableRoles.forEach(role => {
+    console.log("Requesting role:", role);
+
+    this.compService.getFrameworkForRole(role).subscribe({
+      next: (list) => {
+        console.log(role, list);
+
+        this.frameworks.update(current => [...current, ...list]);
+
+        console.log("Current frameworks:", this.frameworks());
+      },
+      error: (err) => {
+        console.error(role, err);
+      }
     });
-  }
+  });
+}
 
   // --- Catalog Actions ---
   openAddCompModal(): void {
@@ -193,11 +204,26 @@ export class CompetencyFeature implements OnInit {
       this.frameworkForm.markAllAsTouched();
       return;
     }
-
     const value = this.frameworkForm.value;
-    const selectedComp = this.competencies().find(c => c.competencyId === value.competencyId);
 
-    if (!selectedComp) return;
+    const selectedComp = this.competencies().find(
+      c => c.competencyId === Number(value.competencyId)
+    );
+
+    if (!selectedComp) {
+      return;
+    }
+
+    const duplicate = this.frameworks().some(f =>
+      f.role === value.role &&
+      f.competency.competencyId === Number(value.competencyId)
+    );
+
+    if (duplicate) {
+      this.closeFrameworkModal();
+      this.toast.showWarning("This competency is already defined for this role.");
+      return;
+    }
 
     const fw: CompetencyFramework = {
       role: value.role,
@@ -206,14 +232,15 @@ export class CompetencyFeature implements OnInit {
     };
 
     this.compService.defineFrameworkRequirement(fw).subscribe({
-      next: () => {
-        this.toast.showSuccess(`Defined framework target for ${value.role}.`);
+      next: (res) => {
         this.loadFrameworks();
         this.closeFrameworkModal();
       },
-      error: (err) => this.toast.showError(err.message)
+      error: (err) => {
+        console.log("9. Error", err);
+      }
     });
-  }
+  }   
 
   // --- Record Competency Actions ---
   openRecordModal(): void {

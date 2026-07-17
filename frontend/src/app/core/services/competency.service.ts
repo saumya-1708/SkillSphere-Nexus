@@ -198,12 +198,17 @@ export class CompetencyService {
 
   // --- Competency Framework ---
   defineFrameworkRequirement(framework: CompetencyFramework): Observable<CompetencyFramework> {
+    console.log("Inside defineFrameworkRequirement");
+    console.log(framework);
+
     if (environment.useMock) {
        const newId =this.mockFrameworks.length > 0 ? Math.max(...this.mockFrameworks.map(f => f.frameworkId ?? 0)) + 1 : 1;
       const newFw = { ...framework, frameworkId: newId };
       this.mockFrameworks.push(newFw);
       return of(newFw);
     }
+    console.log("Making HTTP POST");
+    
     return this.http.post<CompetencyFrameworkResponseDTO>(`${this.baseUrl}/frameworks`, this.toFrameworkRequest(framework)).pipe(
       map(dto => this.toFrameworkModel(dto)),
       catchError(this.handleError)

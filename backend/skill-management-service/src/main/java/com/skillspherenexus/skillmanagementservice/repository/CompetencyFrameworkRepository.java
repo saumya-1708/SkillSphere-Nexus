@@ -9,4 +9,7 @@ import com.skillspherenexus.skillmanagementservice.entity.CompetencyFramework;
 public interface CompetencyFrameworkRepository extends JpaRepository<CompetencyFramework, Integer> {
 
     List<CompetencyFramework> findByRole(String role);
+
+    boolean existsByRoleAndCompetency_CompetencyId(String role, Integer competencyId);
+
 }

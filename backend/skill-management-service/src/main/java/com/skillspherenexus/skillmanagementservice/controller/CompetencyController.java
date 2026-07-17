@@ -2,6 +2,7 @@ package com.skillspherenexus.skillmanagementservice.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,12 +61,27 @@ public class CompetencyController {
 
     @PostMapping("/frameworks")
     public CompetencyFrameworkResponseDTO defineFramework(@RequestBody CompetencyFrameworkRequestDTO request) {
+
+        System.out.println("===== CONTROLLER HIT =====");
+        System.out.println(request.getRole());
+        System.out.println(request.getCompetencyId());
+        System.out.println(request.getRequiredLevel());
+
         return competencyService.defineFrameworkRequirement(request);
     }
 
     @GetMapping("/frameworks/role/{role}")
-    public List<CompetencyFrameworkResponseDTO> getFrameworkByRole(@PathVariable String role) {
-        return competencyService.getFrameworkForRole(role);
+    public ResponseEntity<List<CompetencyFrameworkResponseDTO>> getFrameworkForRole(
+            @PathVariable String role) {
+
+        System.out.println("GET role = " + role);
+
+        List<CompetencyFrameworkResponseDTO> list =
+                competencyService.getFrameworkForRole(role);
+
+        System.out.println("Returning " + list.size() + " frameworks");
+
+        return ResponseEntity.ok(list);
     }
 
     @PostMapping("/employee-levels")

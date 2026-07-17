@@ -81,15 +81,27 @@ public class CompetencyServiceImpl implements CompetencyService {
     }
 
     @Override
-    public CompetencyFrameworkResponseDTO defineFrameworkRequirement(CompetencyFrameworkRequestDTO request) {
+    public CompetencyFrameworkResponseDTO defineFrameworkRequirement(
+            CompetencyFrameworkRequestDTO request) {
+
+        if (frameworkRepository.existsByRoleAndCompetency_CompetencyId(
+                request.getRole(),
+                request.getCompetencyId())) {
+
+            throw new IllegalArgumentException(
+                    "This competency is already defined for the selected role.");
+        }
+
+        Competency competency = competencyRepository.findById(request.getCompetencyId())
+                .orElseThrow(() -> new RuntimeException("Competency not found"));
+
         CompetencyFramework framework = new CompetencyFramework();
         framework.setRole(request.getRole());
-        framework.setCompetency(competencyRepository.findById(request.getCompetencyId())
-                .orElseThrow(() -> new RuntimeException("Competency not found: " + request.getCompetencyId())));
+        framework.setCompetency(competency);
         framework.setRequiredLevel(request.getRequiredLevel());
 
         return convertToResponse(frameworkRepository.save(framework));
-    }
+    }   
 
     @Override
     public List<CompetencyFrameworkResponseDTO> getFrameworkForRole(String role) {
