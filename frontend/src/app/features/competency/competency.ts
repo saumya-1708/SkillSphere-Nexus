@@ -293,6 +293,7 @@ export class CompetencyFeature implements OnInit {
 
     this.compService.analyzeGap(empId, role).subscribe({
       next: (results) => {
+        console.log(results);
         this.gapResults.set(results);
         this.gapSearched.set(true);
       },

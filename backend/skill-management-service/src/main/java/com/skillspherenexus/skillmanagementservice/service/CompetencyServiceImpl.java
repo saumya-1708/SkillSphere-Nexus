@@ -163,7 +163,7 @@ public class CompetencyServiceImpl implements CompetencyService {
                             .map(employeeCompetency -> employeeCompetency.getCurrentLevel())
                             .orElse(0);
 
-                    int gap = req.getRequiredLevel() - currentLevel;
+                    int gap = Math.max(0, req.getRequiredLevel() - currentLevel);
 
                     return new GapResult(
                             req.getCompetency().getName(),

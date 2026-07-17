@@ -174,14 +174,24 @@
   z-index: 5;
 }
 
-.current-bar.gap {
-  background: linear-gradient(90deg, var(--danger) 0%, var(--warning) 100%);
-  box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+.current-bar.gap-green {
+    background: #22c55e;
+    box-shadow: 0 0 10px rgba(34,197,94,.35);
 }
 
-.current-bar.met {
-  background: linear-gradient(90deg, var(--accent-primary) 0%, var(--success) 100%);
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+.current-bar.gap-yellow {
+    background: #eab308;
+    box-shadow: 0 0 10px rgba(234,179,8,.35);
+}
+
+.current-bar.gap-orange {
+    background: #f97316;
+    box-shadow: 0 0 10px rgba(249,115,22,.35);
+}
+
+.current-bar.gap-red {
+    background: #ef4444;
+    box-shadow: 0 0 10px rgba(239,68,68,.35);
 }
 
 /* Modals structures standard overrides */

@@ -2,10 +2,10 @@ package com.skillspherenexus.skillmanagementservice.dto;
 
 public class GapResult {
 
-    private String competencyName;
-    private Integer requiredLevel;
-    private Integer currentLevel;
-    private Integer gap;
+    private final String competencyName;
+    private final Integer requiredLevel;
+    private final Integer currentLevel;
+    private final Integer gap;
 
     public GapResult(String competencyName, Integer requiredLevel, Integer currentLevel, Integer gap) {
         this.competencyName = competencyName;

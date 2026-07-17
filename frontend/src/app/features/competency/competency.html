@@ -176,7 +176,11 @@
                     <span class="badge" style="background: rgba(255, 255, 255, 0.05); color: var(--text-secondary)">Req: L{{ g.requiredLevel }}</span>
                     <span class="badge" style="background: rgba(255, 255, 255, 0.05); color: var(--text-secondary)">Got: L{{ g.currentLevel }}</span>
                     <span class="badge" [ngClass]="g.gap > 0 ? 'badge-danger' : 'badge-success'">
-                      {{ g.gap > 0 ? 'Gap: -' + g.gap : 'Qualified' }}
+                      @if (g.gap > 0) {
+                        Gap: {{ g.gap }}
+                      } @else {
+                        Qualified
+                      }
                     </span>
                   </div>
                 </div>
@@ -185,7 +189,15 @@
                   <!-- Required Level Indicator (Dotted vertical line or sub-bar) -->
                   <div class="gap-level-bar required-bar" [style.width.%]="(g.requiredLevel / 5) * 100"></div>
                   <!-- Current Employee Level Indicator (Solid colored bar overlay) -->
-                  <div class="gap-level-bar current-bar" [style.width.%]="(g.currentLevel / 5) * 100" [ngClass]="g.gap > 0 ? 'gap' : 'met'"></div>
+                  <div class="gap-level-bar current-bar"
+                    [style.width.%]="g.currentLevel === 0 ? 2 : (g.currentLevel / 5) * 100"
+                    [ngClass]="{
+                        'gap-green': g.gap === 0,
+                        'gap-yellow': g.gap === 1,
+                        'gap-orange': g.gap === 2,
+                        'gap-red': g.gap >= 3
+                    }">
+                </div>
                 </div>
               </div>
             }
