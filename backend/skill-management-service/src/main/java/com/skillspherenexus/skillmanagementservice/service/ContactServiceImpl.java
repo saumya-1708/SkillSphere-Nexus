@@ -3,6 +3,8 @@ package com.skillspherenexus.skillmanagementservice.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,8 @@ import com.skillspherenexus.skillmanagementservice.repository.ContactRepository;
 
 @Service
 public class ContactServiceImpl implements ContactService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ContactServiceImpl.class);
 
     @Autowired
     private ContactRepository contactRepository;
@@ -45,7 +49,10 @@ public class ContactServiceImpl implements ContactService {
     public ContactResponseDTO updateContact(Integer contactId, ContactRequestDTO request) {
 
         Contact existingContact = contactRepository.findById(contactId)
-                .orElseThrow(() -> new RuntimeException("Contact not found"));
+                .orElseThrow(() -> {
+                    logger.warn("Contact not found: contactId={}", contactId);
+                    return new RuntimeException("Contact not found");
+                });
 
         existingContact.setUserId(request.getUserId());
         existingContact.setPhone(request.getPhone());

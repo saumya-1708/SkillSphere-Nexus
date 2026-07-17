@@ -3,6 +3,8 @@ package com.skillspherenexus.skillmanagementservice.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,8 @@ import com.skillspherenexus.skillmanagementservice.repository.UserRepository;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -44,7 +48,10 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO updateUser(Integer userId, UserRequestDTO request) {
 
         User existingUser = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> {
+                    logger.warn("User not found: userId={}", userId);
+                    return new RuntimeException("User not found");
+                });
 
         existingUser.setName(request.getName());
         existingUser.setEmail(request.getEmail());

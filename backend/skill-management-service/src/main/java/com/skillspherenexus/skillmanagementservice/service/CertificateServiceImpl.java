@@ -4,7 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,8 @@ import com.skillspherenexus.skillmanagementservice.repository.CertificateReposit
 
 @Service
 public class CertificateServiceImpl implements CertificateService {
+
+    private static final Logger logger = LoggerFactory.getLogger(CertificateServiceImpl.class);
 
     @Autowired
     private CertificateRepository certificateRepository;
@@ -63,7 +66,10 @@ public class CertificateServiceImpl implements CertificateService {
     public CertificateResponseDTO updateCertificate(Integer id, CertificateRequestDTO request) {
 
         Certificate certificate = certificateRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Certificate not found"));
+                .orElseThrow(() -> {
+                    logger.warn("Certificate not found: id={}", id);
+                    return new RuntimeException("Certificate not found");
+                });
 
         certificate.setEmpid(request.getEmpid());
         certificate.setName(request.getName());

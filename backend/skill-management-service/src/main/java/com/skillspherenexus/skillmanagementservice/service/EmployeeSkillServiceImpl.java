@@ -3,6 +3,8 @@ package com.skillspherenexus.skillmanagementservice.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,8 @@ import com.skillspherenexus.skillmanagementservice.repository.EmployeeSkillRepos
 
 @Service
 public class EmployeeSkillServiceImpl implements EmployeeSkillService {
+
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeSkillServiceImpl.class);
 
     @Autowired
     private EmployeeSkillRepository employeeSkillRepository;
@@ -47,7 +51,10 @@ public class EmployeeSkillServiceImpl implements EmployeeSkillService {
 
         EmployeeSkill existingEmployeeSkill = employeeSkillRepository
                 .findById(employeeSkillId)
-                .orElseThrow(() -> new RuntimeException("Employee Skill not found"));
+                .orElseThrow(() -> {
+                    logger.warn("Employee Skill not found: employeeSkillId={}", employeeSkillId);
+                    return new RuntimeException("Employee Skill not found");
+                });
 
         existingEmployeeSkill.setEmployeeId(request.getEmployeeId());
         existingEmployeeSkill.setSkillId(request.getSkillId());

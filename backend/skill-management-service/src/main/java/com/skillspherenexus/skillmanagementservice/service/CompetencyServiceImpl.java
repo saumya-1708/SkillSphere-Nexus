@@ -3,6 +3,8 @@ package com.skillspherenexus.skillmanagementservice.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.skillspherenexus.skillmanagementservice.dto.CompetencyFrameworkRequestDTO;
@@ -21,6 +23,8 @@ import com.skillspherenexus.skillmanagementservice.repository.EmployeeCompetency
 
 @Service
 public class CompetencyServiceImpl implements CompetencyService {
+
+    private static final Logger logger = LoggerFactory.getLogger(CompetencyServiceImpl.class);
 
     private final CompetencyRepository competencyRepository;
     private final CompetencyFrameworkRepository frameworkRepository;
@@ -63,7 +67,10 @@ public class CompetencyServiceImpl implements CompetencyService {
     public CompetencyResponseDTO update(Integer id, CompetencyRequestDTO request) {
 
         Competency existing = competencyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Competency not found: " + id));
+                .orElseThrow(() -> {
+                    logger.warn("Attempted to update nonexistent competency with id={}", id);
+                    return new RuntimeException("Competency not found: " + id);
+                });
 
         existing.setName(request.getName());
         existing.setCategory(request.getCategory());
@@ -76,7 +83,10 @@ public class CompetencyServiceImpl implements CompetencyService {
     @Override
     public void delete(Integer id) {
         Competency existing = competencyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Competency not found: " + id));
+                .orElseThrow(() -> {
+                    logger.warn("Attempted to delete nonexistent competency with id={}", id);
+                    return new RuntimeException("Competency not found: " + id);
+                });
         competencyRepository.delete(existing);
     }
 
@@ -88,12 +98,16 @@ public class CompetencyServiceImpl implements CompetencyService {
                 request.getRole(),
                 request.getCompetencyId())) {
 
+            logger.info("Competency {} already defined for role {}", request.getCompetencyId(), request.getRole());
             throw new IllegalArgumentException(
                     "This competency is already defined for the selected role.");
         }
 
         Competency competency = competencyRepository.findById(request.getCompetencyId())
-                .orElseThrow(() -> new RuntimeException("Competency not found"));
+                .orElseThrow(() -> {
+                    logger.warn("Competency not found for framework request, competencyId={}", request.getCompetencyId());
+                    return new RuntimeException("Competency not found");
+                });
 
         CompetencyFramework framework = new CompetencyFramework();
         framework.setRole(request.getRole());
@@ -122,7 +136,10 @@ public class CompetencyServiceImpl implements CompetencyService {
 
         existing.setEmployeeId(employeeId);
         existing.setCompetency(competencyRepository.findById(competencyId)
-                .orElseThrow(() -> new RuntimeException("Competency not found: " + competencyId)));
+                .orElseThrow(() -> {
+                    logger.warn("Competency not found while recording employee level, competencyId={}", competencyId);
+                    return new RuntimeException("Competency not found: " + competencyId);
+                }));
         existing.setCurrentLevel(request.getCurrentLevel());
 
         return convertToResponse(employeeCompetencyRepository.save(existing));
@@ -132,6 +149,10 @@ public class CompetencyServiceImpl implements CompetencyService {
     public List<GapResult> analyzeGap(Integer employeeId, String targetRole) {
 
         List<CompetencyFramework> requirements = frameworkRepository.findByRole(targetRole);
+
+        if (requirements.isEmpty()) {
+            logger.info("No competency framework defined for role={}", targetRole);
+        }
 
         return requirements.stream()
                 .map(req -> {

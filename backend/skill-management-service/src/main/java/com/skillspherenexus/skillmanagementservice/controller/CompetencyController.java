@@ -61,25 +61,14 @@ public class CompetencyController {
 
     @PostMapping("/frameworks")
     public CompetencyFrameworkResponseDTO defineFramework(@RequestBody CompetencyFrameworkRequestDTO request) {
-
-        System.out.println("===== CONTROLLER HIT =====");
-        System.out.println(request.getRole());
-        System.out.println(request.getCompetencyId());
-        System.out.println(request.getRequiredLevel());
-
         return competencyService.defineFrameworkRequirement(request);
     }
 
     @GetMapping("/frameworks/role/{role}")
     public ResponseEntity<List<CompetencyFrameworkResponseDTO>> getFrameworkForRole(
             @PathVariable String role) {
-
-        System.out.println("GET role = " + role);
-
         List<CompetencyFrameworkResponseDTO> list =
                 competencyService.getFrameworkForRole(role);
-
-        System.out.println("Returning " + list.size() + " frameworks");
 
         return ResponseEntity.ok(list);
     }

@@ -3,6 +3,8 @@ package com.skillspherenexus.skillmanagementservice.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,8 @@ import com.skillspherenexus.skillmanagementservice.repository.AssessmentReposito
 
 @Service
 public class AssessmentServiceImpl implements AssessmentService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AssessmentServiceImpl.class);
 
     @Autowired
     private AssessmentRepository repository;
@@ -46,8 +50,10 @@ public class AssessmentServiceImpl implements AssessmentService {
 
         Assessment assessment = repository.findById(id).orElse(null);
 
-        if (assessment == null)
+        if (assessment == null) {
+            logger.warn("Assessment not found: id={}", id);
             return null;
+        }
 
         return convertToResponse(assessment);
     }
@@ -58,8 +64,10 @@ public class AssessmentServiceImpl implements AssessmentService {
 
         Assessment existing = repository.findById(id).orElse(null);
 
-        if (existing == null)
+        if (existing == null) {
+            logger.warn("Attempted update on nonexistent assessment: id={}", id);
             return null;
+        }
 
         existing.setEmployeeId(request.getEmployeeId());
         existing.setSkillId(request.getSkillId());
